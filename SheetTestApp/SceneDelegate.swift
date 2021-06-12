@@ -1,10 +1,3 @@
-//
-//  SceneDelegate.swift
-//  SheetTestApp
-//
-//  Created by Lukas Capkovic on 6/11/21.
-//
-
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
