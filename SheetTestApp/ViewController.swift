@@ -86,9 +86,9 @@ class ViewController: UIViewController {
 		view.addSubview(stack)
 
 		NSLayoutConstraint.activate([
-			stack.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+			stack.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10),
 			stack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-			stack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
+			stack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
 		])
 		return view
 	}
@@ -151,12 +151,12 @@ class ViewController: UIViewController {
 				if let booleanItem = item as? BooleanSettingItem {
 					self.mediumDetentEnabled = booleanItem.isOn
 				}
-			}, isOn: mediumDetentEnabled),
+			}, isOn: mediumDetentEnabled, subtitle: "Enabling this passes [.medium(), .large()] as the detents list. The default is [.large()]"),
 			BooleanSettingItem(title: "Scrolling expands", action: {item in
 				if let booleanItem = item as? BooleanSettingItem {
 					self.scrollingExpandsSheet = booleanItem.isOn
 				}
-			}, isOn: scrollingExpandsSheet),
+			}, isOn: scrollingExpandsSheet, subtitle: "Scrolling the sheet content will expand the sheet up to its largest detent."),
 			BooleanSettingItem(title: "Grabber visible", action: {item in
 				if let booleanItem = item as? BooleanSettingItem {
 					self.grabberVisible = booleanItem.isOn
@@ -166,12 +166,12 @@ class ViewController: UIViewController {
 				if let booleanItem = item as? BooleanSettingItem {
 					self.edgeAttachedInCompactHeight = booleanItem.isOn
 				}
-			}, isOn: edgeAttachedInCompactHeight),
+			}, isOn: edgeAttachedInCompactHeight, subtitle: "This forces a sheet presentation in heights where the view controller would otherwise be full screen (iPhone landscape)."),
 			BooleanSettingItem(title: "Width follows preferred content size when edge attached", action: {item in
 				if let booleanItem = item as? BooleanSettingItem {
 					self.widthFollowsPreferredContentSize = booleanItem.isOn
 				}
-			}, isOn: widthFollowsPreferredContentSize)
+			}, isOn: widthFollowsPreferredContentSize, subtitle: "Only applies in cases where the sheet doesn't fill the screen width by default.")
 		])
 	]
 }
@@ -203,7 +203,11 @@ extension ViewController: UITableViewDataSource {
 		var configuration = UIListContentConfiguration.cell()
 
 		configuration.text = settingItem.title
-//		configuration.secondaryText = "Subtitle alsd alksdj kajd laskdj lakd, Subtitle alsd alksdj kajd laskdj lakdSubtitle alsd alksdj kajd laskdj lakdSubtitle alsd alksdj kajd laskdj lakdSubtitle alsd alksdj kajd laskdj lakd"
+
+		if settingItem.subtitle != "" {
+			configuration.secondaryText = settingItem.subtitle
+		}
+
 		cell.contentConfiguration = configuration
 
 		if let booleanSettingItem = settingItem as? BooleanSettingItem {
@@ -266,22 +270,24 @@ class SettingSection {
 }
 
 class SettingItem {
-	init(title: String, action: @escaping (SettingItem) -> (), multipleChoice: Bool = false, isSelected: Bool = false) {
+	init(title: String, action: @escaping (SettingItem) -> (), multipleChoice: Bool = false, isSelected: Bool = false, subtitle: String = "") {
 		self.title = title
 		self.action = action
 		self.multipleChoice = multipleChoice
 		self.isSelected = isSelected
+		self.subtitle = subtitle
 	}
 
 	var title: String = ""
+	var subtitle: String = ""
 	var multipleChoice: Bool
 	var isSelected: Bool = false
 	var action: ((SettingItem) -> ())?
 }
 
 class BooleanSettingItem: SettingItem {
-	init(title: String, action: @escaping (SettingItem) -> (), isOn: Bool) {
-		super.init(title: title, action: action)
+	init(title: String, action: @escaping (SettingItem) -> (), isOn: Bool, subtitle: String = "") {
+		super.init(title: title, action: action, subtitle: subtitle)
 		self.isOn = isOn
 	}
 	var isOn: Bool = false
