@@ -1,2 +1,2 @@
 # SheetTestApp
-Basic test app created to learn about the new SheetPresentationController APIs on iPhone and iPad.
+Basic test app created to learn about the new `UISheetPresentationController` APIs on iPhone and iPad.
